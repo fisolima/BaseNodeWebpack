@@ -1,4 +1,5 @@
 var gulp = require("gulp");
+var gutil = require('gulp-util');
 var runSequence = require("run-sequence");
 var del = require("del");
 var gulpInject = require('gulp-inject');
@@ -8,6 +9,7 @@ var concat = require('gulp-concat');
 var stripDebug = require('gulp-strip-debug');
 var uglify = require('gulp-uglify');
 var path = require('path');
+var webpack = require('webpack');
 
 /**
  * Internal tasks
@@ -41,12 +43,12 @@ gulp.task("client:copy_html", function () {
 });
 
 gulp.task("client:dev:compile", function () {
-    return tsClientProject.src()
-            .pipe(sourcemaps.init())
-            .pipe(tsClientProject())
-            .js
-            .pipe(sourcemaps.write("."))
-            .pipe(gulp.dest("dist/public/js"));
+    webpack(require('./webpack.config'), function (err, stats) {
+        if (err)
+            throw new gutil.PluginError("webpack", err);
+
+        gutil.log("[webpack]", stats.toString({}));
+    });
 });
 
 gulp.task("client:prod:compile", function () {
@@ -98,12 +100,6 @@ gulp.task("client:dev:inject", function () {
 
 gulp.task("server:dev:compile", function() {
     return gulp.src("./src/server/**/*.js")
-                // .pipe(sourcemaps.init())
-                // .pipe(sourcemaps.mapSources(function(sourcePath, file) {
-                //     //return '../../src/server/' + sourcePath;
-                //     return path.join(__dirname, 'src/server', sourcePath);
-                // }))
-                // .pipe(sourcemaps.write("."))
                 .pipe(gulp.dest("./dist/server"));
 });
 
