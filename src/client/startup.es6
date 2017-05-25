@@ -1,5 +1,7 @@
-require('./app');
+require('./css/bootstrap.css');
+require('./css/main.css');
+import {App} from './app';
 
-var app = new App(/*your injections here*/);
+const app = new App(/*your injections here*/);
 
 app.Startup();

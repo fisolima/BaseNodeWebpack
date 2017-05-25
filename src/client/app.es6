@@ -5,5 +5,14 @@ class App {
 
     Startup() {
         console.log('App.Startup');
+
+        let title = document.createElement("h1");
+
+        title.className = "btn btn-lg btn-primary";
+        title.innerHTML = "Base Node JS";
+
+        document.body.appendChild(title);
     }
 }
+
+export {App}

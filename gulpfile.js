@@ -9,7 +9,8 @@ var concat = require('gulp-concat');
 var stripDebug = require('gulp-strip-debug');
 var uglify = require('gulp-uglify');
 var path = require('path');
-var webpack = require('webpack');
+var gulpWebpack = require('webpack-stream');
+const webpack = require('webpack')
 
 /**
  * Internal tasks
@@ -43,19 +44,25 @@ gulp.task("client:copy_html", function () {
 });
 
 gulp.task("client:dev:compile", function () {
-    webpack(require('./webpack.config'), function (err, stats) {
-        if (err)
-            throw new gutil.PluginError("webpack", err);
+    // return webpack(require('./webpack.config'), function (err, stats) {
+    //     if (err)
+    //         throw new gutil.PluginError("webpack", err);
 
-        gutil.log("[webpack]", stats.toString({}));
-    });
+    //     gutil.log("[webpack]", stats.toString({}));
+    // });
+    return gulp.src("src/client/startup.es6")
+        .pipe(gulpWebpack(require('./webpack.config'), webpack))
+        .pipe(gulp.dest('./'));
 });
 
 gulp.task("client:prod:compile", function () {
-    return tsClientProject.src()
-            .pipe(tsClientProject())
-            .js
-            .pipe(gulp.dest("dist/public/js"));
+    // return tsClientProject.src()
+    //         .pipe(tsClientProject())
+    //         .js
+    //         .pipe(gulp.dest("dist/public/js"));
+    throw new gutil.Error("Not implemented");
+
+    //var version = GetArgumentVersionValue();
 });
 
 gulp.task("client:prod:clean", function () {
@@ -70,16 +77,6 @@ gulp.task("client:prod:clean", function () {
         "!dist/public/js/app." + version + ".min.js"]);
 });
 
-gulp.task("client:prod:concat_js", function() {
-    var version = GetArgumentVersionValue();
-
-    return gulp.src(["./dist/public/libs/**/*.js", "./dist/public/js/**/*.js"])
-        .pipe(concat("app." + version + ".min.js"))
-        .pipe(stripDebug())
-        .pipe(uglify())
-        .pipe(gulp.dest("./dist/public/js"));
-});
-
 gulp.task("client:prod:inject", function () {
     var version = GetArgumentVersionValue();
 
@@ -91,7 +88,7 @@ gulp.task("client:prod:inject", function () {
 });
 
 gulp.task("client:dev:inject", function () {
-    var sources = gulp.src(["./dist/public/libs/**/*.js", "./dist/public/js/**/*.js", "./dist/public/css/**/*.css"], {read: false});
+    var sources = gulp.src(["./dist/public/**/*.js", "./dist/public/**/*.css"], {read: false});
 
     return gulp.src("./dist/public/index.html")
         .pipe(gulpInject(sources, {relative: true}))
@@ -114,17 +111,19 @@ gulp.task("test:clean", function () {
 });
 
 gulp.task("test:compile", function () {
-    return tsTestProject.src()
-            .pipe(tsTestProject())
-            .js
-            .pipe(gulp.dest("dist/test"));
+    // return tsTestProject.src()
+    //         .pipe(tsTestProject())
+    //         .js
+    //         .pipe(gulp.dest("dist/test"));
+    throw new gutil.Error("Not implemented")
 });
 
 gulp.task("test:run", function () {
-    gulp.src(['dist/test/*.test.js'], { read: false })
-    .pipe(mocha({
-      reporter: 'spec'
-    }));
+    // gulp.src(['dist/test/*.test.js'], { read: false })
+    // .pipe(mocha({
+    //   reporter: 'spec'
+    // }));
+    throw new gutil.Error("Not implemented")
 });
 
 /**
@@ -144,9 +143,6 @@ gulp.task("server:dev:build", function (done) {
 gulp.task("client:dev:build", function (done) {
     runSequence(
         "client:clean",
-        "client:dev:copy_libs",
-        "client:dev:copy_style_libs",
-        "client:dev:copy_styles",
         "client:copy_html",
         "client:dev:compile",
         "client:dev:inject",        
@@ -159,14 +155,8 @@ gulp.task("client:dev:build", function (done) {
 gulp.task("client:prod:build", function (done) {
     runSequence(
         "client:clean",
-        "client:dev:copy_libs",
-        "client:dev:copy_style_libs",
-        "client:dev:copy_styles",
         "client:copy_html",
         "client:prod:compile",
-        "client:prod:concat_js",
-        "client:prod:concat_css",
-        "client:prod:clean",
         "client:prod:inject",
         function () {
             done();

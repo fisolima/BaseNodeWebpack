@@ -9,7 +9,7 @@ class HomeController extends BaseController {
 }
 
 function Index(req, res) {
-    res.end("Home Controller");
+    res.sendFile(path.join(__dirname,'../public','index.html'));
 }
 
 module.exports = HomeController;

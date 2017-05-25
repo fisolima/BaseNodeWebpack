@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = {
     module: {
         loaders: [
@@ -5,6 +7,19 @@ module.exports = {
                 test: /\.es6$/,
                 exclude: /node_modules/,
                 loader: "babel-loader",
+            },
+            {
+                test: /\.css$/,
+                exclude: /node_modules/,
+                loader: "style-loader!css-loader"
+            },
+            {
+                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                loader: 'url-loader'
+            },
+            {
+                test: /\.(ttf|otf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?|(jpg|gif)$/,
+                loader: 'url-loader'
             }
         ],
     },
@@ -14,6 +29,6 @@ module.exports = {
     },
     entry: './src/client/startup.es6',
     output: {
-        filename: './dist/public/bundle.js'
+        filename: 'dist/public/js/bundle.js'
     }
 }
