@@ -9,7 +9,7 @@ class App {
         let title = document.createElement("h1");
 
         title.className = "btn btn-lg btn-primary";
-        title.innerHTML = "Base Node JS";
+        title.innerHTML = "Base Node";
 
         document.body.appendChild(title);
     }
