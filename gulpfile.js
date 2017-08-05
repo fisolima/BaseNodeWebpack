@@ -10,7 +10,8 @@ var stripDebug = require('gulp-strip-debug');
 var uglify = require('gulp-uglify');
 var path = require('path');
 var gulpWebpack = require('webpack-stream');
-const webpack = require('webpack')
+const webpack = require('webpack');
+var webpackProdConfig = require('./webpack.prod.config');
 
 /**
  * Internal tasks
@@ -44,43 +45,19 @@ gulp.task("client:copy_html", function () {
 });
 
 gulp.task("client:dev:compile", function () {
-    // return webpack(require('./webpack.config'), function (err, stats) {
-    //     if (err)
-    //         throw new gutil.PluginError("webpack", err);
-
-    //     gutil.log("[webpack]", stats.toString({}));
-    // });
     return gulp.src("src/client/startup.es6")
         .pipe(gulpWebpack(require('./webpack.config'), webpack))
         .pipe(gulp.dest('./'));
 });
 
 gulp.task("client:prod:compile", function () {
-    // return tsClientProject.src()
-    //         .pipe(tsClientProject())
-    //         .js
-    //         .pipe(gulp.dest("dist/public/js"));
-    throw new gutil.Error("Not implemented");
-
-    //var version = GetArgumentVersionValue();
-});
-
-gulp.task("client:prod:clean", function () {
-    var version = GetArgumentVersionValue();
-
-    return del(
-        ["dist/public/css/**/*.css",
-        "dist/public/css/libs",
-        "!dist/public/css/style." + version + ".min.css",
-        "dist/public/js/**/*.js",
-        "dist/public/libs",
-        "!dist/public/js/app." + version + ".min.js"]);
+    return gulp.src("src/client/startup.es6")
+        .pipe(gulpWebpack(webpackProdConfig(GetArgumentVersionValue()), webpack))
+        .pipe(gulp.dest('./')); 
 });
 
 gulp.task("client:prod:inject", function () {
-    var version = GetArgumentVersionValue();
-
-    var sources = gulp.src(["./dist/public/js/app." + version + ".min.js", "./dist/public/css/style." + version + ".min.css"], {read: false});
+    var sources = gulp.src(["./dist/public/**/*.min.js", "./dist/public/**/*.min.css"], {read: false});
 
     return gulp.src("./dist/public/index.html")
         .pipe(gulpInject(sources, {relative: true}))
