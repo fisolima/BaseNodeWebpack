@@ -88,19 +88,15 @@ gulp.task("test:clean", function () {
 });
 
 gulp.task("test:compile", function () {
-    // return tsTestProject.src()
-    //         .pipe(tsTestProject())
-    //         .js
-    //         .pipe(gulp.dest("dist/test"));
-    throw new gutil.Error("Not implemented")
+    return gulp.src("./src/test/**/*")
+                .pipe(gulp.dest("./dist/test"));
 });
 
 gulp.task("test:run", function () {
-    // gulp.src(['dist/test/*.test.js'], { read: false })
-    // .pipe(mocha({
-    //   reporter: 'spec'
-    // }));
-    throw new gutil.Error("Not implemented")
+    return gulp.src(['dist/test/*.test.js'], { read: false })
+                .pipe(mocha({
+                    reporter: 'spec'
+                }));
 });
 
 /**
@@ -174,6 +170,8 @@ gulp.task("prod:build", function (done) {
 gulp.task("test", function (done) {
     runSequence(
         "test:clean",
+        "server:dev:build",
+        "client:dev:build",
         "test:compile",
         "test:run",
         function () {
