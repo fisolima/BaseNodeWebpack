@@ -8,10 +8,12 @@ var mocha = require('gulp-mocha');
 var concat = require('gulp-concat');
 var stripDebug = require('gulp-strip-debug');
 var uglify = require('gulp-uglify');
+var uglifycss = require('gulp-clean-css');
 var path = require('path');
 var gulpWebpack = require('webpack-stream');
-const webpack = require('webpack');
+var webpack = require('webpack');
 var webpackProdConfig = require('./webpack.prod.config');
+var gulpReplace = require('gulp-replace');
 
 /**
  * Internal tasks
@@ -83,6 +85,18 @@ gulp.task("server:prod:compile", function() {
                 .pipe(gulp.dest("./dist/server"));
 });
 
+gulp.task("client:adjustcsspath", function() {
+    return gulp.src("./dist/public/css/*.css")
+        .pipe(gulpReplace('url(dist/public/font/', 'url(../font/'))
+        .pipe(gulp.dest("./dist/public/css"));
+});
+
+gulp.task("client:uglifycss", function() {
+    return gulp.src("./dist/public/css/*.css")
+        .pipe(uglifycss())
+        .pipe(gulp.dest("./dist/public/css"));
+});
+
 gulp.task("test:clean", function () {
     return del("dist/test/**/*");
 });
@@ -118,6 +132,7 @@ gulp.task("client:dev:build", function (done) {
         "client:clean",
         "client:copy_html",
         "client:dev:compile",
+        "client:adjustcsspath",
         "client:dev:inject",        
         function () {
             done();
@@ -130,6 +145,8 @@ gulp.task("client:prod:build", function (done) {
         "client:clean",
         "client:copy_html",
         "client:prod:compile",
+        "client:adjustcsspath",
+        "client:uglifycss",
         "client:prod:inject",
         function () {
             done();

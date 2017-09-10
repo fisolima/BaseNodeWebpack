@@ -1,4 +1,4 @@
-var path = require('path');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     module: {
@@ -9,17 +9,22 @@ module.exports = {
                 loader: "babel-loader",
             },
             {
+                test: /\.(jpg|gif|png)$/,
+                loader: "file-loader",
+                options: {
+                    name: 'dist/public/img/[name].[ext]'
+                }
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf|svg)$/,
+                loader: "file-loader",
+                options: {
+                    name: 'dist/public/font/[name].[ext]'
+                }
+            },
+            {
                 test: /\.css$/,
-                exclude: /node_modules/,
-                loader: "style-loader!css-loader"
-            },
-            {
-                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: 'url-loader'
-            },
-            {
-                test: /\.(ttf|otf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?|(jpg|gif)$/,
-                loader: 'url-loader'
+                loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader'})
             }
         ],
     },
@@ -30,5 +35,13 @@ module.exports = {
     entry: './src/client/startup.es6',
     output: {
         filename: 'dist/public/js/bundle.js'
-    }
+    },
+    plugins: [
+        new ExtractTextPlugin(
+            {
+                filename: "dist/public/css/bundle.css",
+                disable: false,
+                allChunks: true
+            })
+    ]
 }
