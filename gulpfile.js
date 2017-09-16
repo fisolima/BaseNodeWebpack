@@ -14,6 +14,9 @@ var gulpWebpack = require('webpack-stream');
 var webpack = require('webpack');
 var webpackProdConfig = require('./webpack.prod.config');
 var gulpReplace = require('gulp-replace');
+var spawn = require('child_process').spawn;
+
+var _serverInstance;
 
 /**
  * Internal tasks
@@ -113,6 +116,17 @@ gulp.task("test:run", function () {
                 }));
 });
 
+gulp.task("server:run", function () {
+    if (_serverInstance)
+        _serverInstance.kill();
+
+    _serverInstance = spawn('node', ['dist/server/startup.js'], {stdio: 'inherit'});
+
+    _serverInstance.on('close', (code) => {
+        console.log(`Server instance exit with ${code}`);
+    });
+});
+
 /**
  * Available tasks
  */
@@ -192,6 +206,24 @@ gulp.task("test", function (done) {
         "test:compile",
         "test:run",
         function () {
+            done();
+        }
+    );
+});
+
+gulp.task("dev:run", function (done) {
+    runSequence(
+        "dev:build",
+        "server:run",
+        function () {
+            gulp.watch(['src/server/**/*'], () => {
+                runSequence("server:dev:build","server:run");
+            });
+
+            gulp.watch(['src/client/**/*'], () => {
+                runSequence("client:dev:build");
+            });
+
             done();
         }
     );

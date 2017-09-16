@@ -1,7 +1,7 @@
 # BaseNodeTs
 
 ## Introduction
-Basic nodejs project in ES6 for single page applications.
+Basic nodejs project in ES6 for web applications.
 This project uses [gulp](http://http://gulpjs.com) to manage tasks and [webpack](https://webpack.js.org) to manage client packages.
 
 ## Installation
@@ -37,6 +37,9 @@ The following gulp commands are configured
 	Generate in *dist/server* folder server development files
 * **dev:build**
 	Generate in *dist* folder both server and client development files
+* **dev:run**
+	Build development files and run a server instance.
+	Rebuild and restart the server, if needed, on any source change detected.
 * **test**
 	Execute all tests
 * **client:prod:build --build_version *version***
