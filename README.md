@@ -1,4 +1,4 @@
-# BaseNodeTs
+# BaseNodeWebpack
 
 ## Introduction
 Basic nodejs project in ES6 for web applications.
