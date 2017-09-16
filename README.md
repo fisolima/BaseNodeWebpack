@@ -13,6 +13,7 @@ This project uses [gulp](http://http://gulpjs.com) to manage tasks and [webpack]
 	npm install -g gulp-cli
     npm install -g webpack
     npm install -g mocha
+	npm install -g apidoc
     ```
  * Complete the installation with the following commands:
     ```
@@ -48,4 +49,10 @@ The following gulp commands are configured
 	Generate in *dist/server* folder client and server distributable files. *version* value must be provided
 * **prod:build --build_version *version***
 	Generate in *dist* folder client and server distributable files. *version* value must be provided
+* **doc**
+	Generate in *dist/documents* both API and source code documentation.
 
+## Documentation
+
+API documentation is provided by [apidoc](http://apidocjs.com/).
+Source code documentation is provided by [jsdoc](http://usejsdoc.org/).

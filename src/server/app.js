@@ -2,7 +2,13 @@ var express = require('express');
 var path = require('path');
 var HomeController = require('./controllers/homeController');
 
+/**
+ * Main server application class
+ */
 class App {
+    /** 
+     * Initialize Express and controllers
+    */
     constructor(/*your injection here*/) {
         this._express = express();
         this._port = process.env.PORT || 3000;
@@ -10,6 +16,10 @@ class App {
         RegisterRoutes(this);
     }
 
+    /**
+     * Initialize server application.
+     * Activate Express listener
+     */
     Start() {
         // console.log('App.Start');
         // console.log(path.resolve(__dirname));
@@ -20,6 +30,10 @@ class App {
     }
 }
 
+/**
+ * Register controllers and public contents
+ * @param {express} app 
+ */
 function RegisterRoutes(app) {
     app._express.use(express.static(path.join(__dirname, "../public")));
 
