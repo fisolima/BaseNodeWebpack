@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path');
 var HomeController = require('./controllers/homeController');
+var config = require('./config.json');
 
 /**
  * Main server application class
@@ -11,7 +12,7 @@ class App {
     */
     constructor(/*your injection here*/) {
         this._express = express();
-        this._port = process.env.PORT || 3000;
+        this._port = process.env.PORT || config.port || 5000;
 
         RegisterRoutes(this);
     }

@@ -1,3 +1,4 @@
+var fs = require('fs');
 var gulp = require("gulp");
 var gutil = require('gulp-util');
 var runSequence = require("run-sequence");
@@ -84,6 +85,11 @@ gulp.task("server:dev:compile", function() {
                 .pipe(gulp.dest("./dist/server"));
 });
 
+gulp.task("server:config", function() {
+    return gulp.src("./src/server/config.json")
+                .pipe(gulp.dest("./dist/server"));
+});
+
 gulp.task("server:prod:compile", function() {
     return gulp.src("./src/server/**/*.js")
                 .pipe(stripDebug())
@@ -154,6 +160,7 @@ gulp.task("server:dev:build", function (done) {
     runSequence(
         "server:clean",
         "server:dev:compile",
+        "server:config",
         function() {
             done();
         }
@@ -189,9 +196,18 @@ gulp.task("client:prod:build", function (done) {
 
 gulp.task("server:prod:build", function (done) {
     runSequence(
+        "test:clean",
         "server:clean",
         "server:prod:compile",
+        "server:config",
         function() {
+            let packageJson = require('./package.json');
+
+            packageJson.main = 'server/startup.js';
+            packageJson.devDependencies = {};
+
+            fs.writeFileSync('dist/package.json', JSON.stringify(packageJson, null, 2));
+
             done();
         }
     );

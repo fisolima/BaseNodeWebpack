@@ -2,7 +2,7 @@
 
 ## Introduction
 Basic nodejs project in ES6 for web applications.
-This project uses [gulp](http://http://gulpjs.com) to manage tasks and [webpack](https://webpack.js.org) to manage client packages.
+This project uses [gulp](http://gulpjs.com) to manage tasks and [webpack](https://webpack.js.org) to manage client packages.
 
 ## Installation
  * Ensure [node js](https://nodejs.org) and [npm](https://www.npmjs.com/) are installed. Nodejs version 6.9.5 has been used for this project
